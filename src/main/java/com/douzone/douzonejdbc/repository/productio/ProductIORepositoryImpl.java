@@ -1,4 +1,4 @@
-package com.douzone.douzonejdbc.repository.product;
+package com.douzone.douzonejdbc.repository.productio;
 
 import com.douzone.douzonejdbc.dto.ProductDto;
 
@@ -9,7 +9,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductRepositoryImpl implements ProductRepository {
+public class ProductIORepositoryImpl implements ProductIORepository {
+    private static final ProductIORepositoryImpl instance = new ProductIORepositoryImpl();
+
+    private ProductIORepositoryImpl() {
+    }
+
+    public static ProductIORepositoryImpl getInstance() {
+        return instance;
+    }
+
     @Override
     public List<ProductDto> findAllByProduct(Connection connection) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(
@@ -82,12 +91,32 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Integer importProduct(Connection connection) {
-        return null;
+    public Integer importProduct(Connection connection, ProductDto productDto) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                "INSERT INTO PRODUCT_IO (IO_NUM, PRODUCT_ID, AMOUNT, STATUS) VALUES (IO_NUM_AUTO_INCREMENTS_SEQ.nextval,?,?,'입고')"
+        )) {
+            preparedStatement.setString(1, productDto.getProductId());
+            preparedStatement.setLong(2, productDto.getAmount());
+            Integer result = preparedStatement.executeUpdate();
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+
     @Override
-    public Integer exportProduct(Connection connection) {
-        return null;
+    public Integer exportProduct(Connection connection, ProductDto productDto) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                "INSERT INTO PRODUCT_IO (IO_NUM, PRODUCT_ID, AMOUNT, STATUS) VALUES (IO_NUM_AUTO_INCREMENTS_SEQ.nextval,?,?,'출고')"
+        )) {
+            preparedStatement.setString(1, productDto.getProductId());
+            preparedStatement.setLong(2, productDto.getAmount());
+            Integer result = preparedStatement.executeUpdate();
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
+
 }

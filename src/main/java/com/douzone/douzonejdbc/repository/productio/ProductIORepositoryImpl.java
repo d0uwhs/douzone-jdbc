@@ -38,7 +38,6 @@ public class ProductIORepositoryImpl implements ProductIORepository {
             }
             return productDtoList;
         } catch (SQLException e) {
-            // TODO : Exception Throw?
             throw new RuntimeException(e);
         }
     }
@@ -97,8 +96,7 @@ public class ProductIORepositoryImpl implements ProductIORepository {
         )) {
             preparedStatement.setString(1, productDto.getProductId());
             preparedStatement.setLong(2, productDto.getAmount());
-            Integer result = preparedStatement.executeUpdate();
-            return result;
+            return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

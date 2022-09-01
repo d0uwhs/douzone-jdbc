@@ -1,13 +1,16 @@
-package com.douzone.douzonejdbc.controller;
+package com.douzone.douzonejdbc.controller.product;
 
 import com.douzone.douzonejdbc.dto.ProductDto;
-import com.douzone.douzonejdbc.services.DefaultProductServices;
-import com.douzone.douzonejdbc.services.ProductService;
+import com.douzone.douzonejdbc.exception.product.ProductNotEnoughException;
+import com.douzone.douzonejdbc.services.product.DefaultProductService;
+import com.douzone.douzonejdbc.services.product.ProductService;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class ProductController {
     private static final ProductController instance = new ProductController();
+    private final ProductService productService = DefaultProductService.getInstance();
 
     private ProductController() {
     }
@@ -17,7 +20,6 @@ public class ProductController {
     }
 
     //    private final ProductService productService = new DefaultProductServices(ProductIORepositoryImpl.getInstance(), ProductStockRepositoryImpl.getInstance());
-    private final ProductService productService = DefaultProductServices.getInstance();
 
     public List<ProductDto> getAllProducts() {
         return productService.getAllProducts();
@@ -39,7 +41,7 @@ public class ProductController {
         return productService.importProduct(productDto);
     }
 
-    public Integer exportProducts(ProductDto productDto) {
+    public Integer exportProducts(ProductDto productDto) throws ProductNotEnoughException, SQLException {
         return productService.exportProducts(productDto);
     }
 }

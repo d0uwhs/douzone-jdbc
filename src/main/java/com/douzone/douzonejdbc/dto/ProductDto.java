@@ -1,7 +1,6 @@
 package com.douzone.douzonejdbc.dto;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
 /**
  * Join 확장 Dto
@@ -119,7 +118,11 @@ public class ProductDto {
         this.price = price;
     }
 
-    public String toStringForGetAllProducts(){
+    public String toStringForIOList() {
         return ioNum + "  " + productId + "  " + pName + "  " + ioDate + "  " + amount + "  " + status;
+    }
+
+    public String toStringForProductList() {
+        return productId + "  " + pName + "  " + price + "  " + description + "  " + stock;
     }
 }

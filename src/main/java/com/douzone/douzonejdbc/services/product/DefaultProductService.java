@@ -1,6 +1,7 @@
-package com.douzone.douzonejdbc.services;
+package com.douzone.douzonejdbc.services.product;
 
 import com.douzone.douzonejdbc.dto.ProductDto;
+import com.douzone.douzonejdbc.exception.product.ProductNotEnoughException;
 import com.douzone.douzonejdbc.repository.productio.ProductIORepository;
 import com.douzone.douzonejdbc.repository.productio.ProductIORepositoryImpl;
 import com.douzone.douzonejdbc.repository.productstock.ProductStockRepository;
@@ -12,21 +13,20 @@ import java.util.List;
 import static com.douzone.douzonejdbc.common.Connector.*;
 
 
-public class DefaultProductServices implements ProductService {
+public class DefaultProductService implements ProductService {
+    private final ProductIORepository productIORepository = ProductIORepositoryImpl.getInstance();
+    private final ProductStockRepository productStockRepository = ProductStockRepositoryImpl.getInstance();
 
-    private static final DefaultProductServices instance = new DefaultProductServices();
+    private static final DefaultProductService instance = new DefaultProductService();
 
-    private DefaultProductServices() {
+    private DefaultProductService() {
 
     }
 
-    public static DefaultProductServices getInstance() {
+    public static DefaultProductService getInstance() {
         return instance;
     }
 
-
-    private final ProductIORepository productIORepository = ProductIORepositoryImpl.getInstance();
-    private final ProductStockRepository productStockRepository = ProductStockRepositoryImpl.getInstance();
 
 //    public DefaultProductServices(ProductIORepository productIORepository, ProductStockRepository productStockRepository) {
 //        this.productIORepository = productIORepository;
@@ -65,13 +65,34 @@ public class DefaultProductServices implements ProductService {
     }
 
     @Override
-    public Integer exportProducts(ProductDto productDto) {
+    public Integer exportProducts(ProductDto productDto) throws ProductNotEnoughException {
         Connection connection = getConnection();
-        Integer result = productIORepository.exportProduct(connection, productDto);
-        return transaction(connection, result);
+        List<ProductDto> getProducts = getProducts(productDto);
+        Long findSelectedProductsAmount = getProducts.get(0).getStock();
+        Long productDtoAmount = productDto.getAmount();
+        Integer result = 0;
+
+        /**
+         * 재고보다 많은 경우
+         */
+        if (findSelectedProductsAmount - productDtoAmount > 0) {
+            result = productIORepository.exportProduct(connection, productDto);
+            return transaction(connection, result);
+        }
+
+        /**
+         * 재고보다 없는 경우
+         */
+        if (findSelectedProductsAmount - productDtoAmount <= 0) {
+            result = 0;
+            transaction(connection, result);
+            throw new ProductNotEnoughException();
+        }
+        return 0;
     }
 
-    private static Integer transaction(Connection connection, Integer result) {
+    // TODO
+    public static Integer transaction(Connection connection, Integer result) {
         if (result > 0) {
             commit(connection);
         }

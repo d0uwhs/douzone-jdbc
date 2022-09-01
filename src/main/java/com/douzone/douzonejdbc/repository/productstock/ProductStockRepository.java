@@ -7,4 +7,13 @@ import java.util.List;
 
 public interface ProductStockRepository {
     List<ProductDto> findSelectedProducts(Connection connection, ProductDto productDto);
+
+    List<ProductDto> findAllRegisteredProducts(Connection connection);
+
+    Integer registerProduct(Connection connection, ProductDto productDto);
+
+    Integer editProduct(Connection connection, ProductDto productDto);
+
+    Integer removeProduct(Connection connection);
+    List<ProductDto> findByRegisteredProducts (Connection connection, String productId);
 }

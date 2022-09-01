@@ -115,7 +115,16 @@ VALUES (IO_NUM_AUTO_INCREMENTS_SEQ.nextval, ?, ?, '출고');
 
 -- PRODUCT_STOCK
 
+
+-- 등록된 상품 전체조회
+SELECT * FROM PRODUCT_STOCK;
+
+
 -- 상품 재고 조회 WHERE PRODUCT_ID
 SELECT *
 FROM PRODUCT_STOCK PS
 WHERE PS.PRODUCT_ID = ?;
+
+-- 상품 정보 등록
+INSERT INTO PRODUCT_STOCK
+VALUES ('nb_ss7', '삼성노트북', 1570000, '시리즈 7', DEFAULT);

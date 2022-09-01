@@ -11,7 +11,7 @@ import static com.douzone.douzonejdbc.JDBCApplication.scanner;
 
 public class ProductMenu {
     private final RegisterProductController registerProductController = RegisterProductController.getInstance();
-    private IOProductMenu IOProductMenu = new IOProductMenu();
+    private final IOProductMenu IOProductMenu = new IOProductMenu();
 
     public void mainMenu() {
         while (true) {
@@ -65,19 +65,46 @@ public class ProductMenu {
     }
 
     private void removeProduct() {
+        System.out.print("상품 아이디 : ");
+        String productId = scanner.nextLine();
+        Integer result = registerProductController.removeProduct(productId);
 
+        if (result > 0) {
+            System.out.println("서비스 요청 성공 : 성공적으로 삭제하였습니다.");
+        }
+
+        if (result.equals(0)) {
+            System.out.println("삭제된 정보가 없습니다.");
+        }
     }
 
     private void editProduct() {
         System.out.print("상품 아이디 : ");
         String productId = scanner.nextLine();
 
-        List<ProductDto> productDtoList = registerProductController.getAllRegisteredProducts();
-        System.out.println("================== 상품 리스트 ==================");
-        for (ProductDto productDto : productDtoList) {
-            System.out.println(productDto.toStringForProductList());
+        System.out.print("\n상품명 : ");
+        String pName = scanner.nextLine();
+
+        System.out.print("\n가격 : ");
+        String price = scanner.nextLine();
+
+        System.out.print("\n부가설명 : ");
+        String description = scanner.nextLine();
+
+        ProductDto productDto = new ProductDto();
+        productDto.setProductId(productId);
+        productDto.setpName(pName);
+        productDto.setPrice(Long.parseLong(price));
+        productDto.setDescription(description);
+        Integer result = registerProductController.editProduct(productDto);
+
+        if (result > 0) {
+            System.out.println("서비스 요청 성공 : 성공적으로 수정하였습니다.");
         }
-        System.out.println("");
+
+        if (result.equals(0)) {
+            System.out.println("수정된 정보가 없습니다.");
+        }
     }
 
     /**

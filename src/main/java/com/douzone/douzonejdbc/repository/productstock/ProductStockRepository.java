@@ -14,6 +14,6 @@ public interface ProductStockRepository {
 
     Integer editProduct(Connection connection, ProductDto productDto);
 
-    Integer removeProduct(Connection connection);
+    Integer removeProduct(Connection connection, String productId);
     List<ProductDto> findByRegisteredProducts (Connection connection, String productId);
 }

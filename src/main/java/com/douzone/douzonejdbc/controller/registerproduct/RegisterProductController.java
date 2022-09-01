@@ -22,15 +22,24 @@ public class RegisterProductController {
         return instance;
     }
 
-    public List<ProductDto> getAllRegisteredProducts(){
+    public List<ProductDto> getAllRegisteredProducts() {
         return registerProductService.getAllRegisteredProducts();
     }
 
-    public Integer registerProduct(ProductDto productDto){
+    public Integer registerProduct(ProductDto productDto) {
         return registerProductService.registerProduct(productDto);
     }
 
     public List<ProductDto> findByRegisteredProducts(String productId) throws ProductNotFoundException {
         return registerProductService.findByRegisteredProducts(productId);
+    }
+
+    public Integer editProduct(ProductDto productDto){
+        return registerProductService.editProduct(productDto);
+
+    }
+
+    public Integer removeProduct(String productId) {
+        return registerProductService.removeProduct(productId);
     }
 }

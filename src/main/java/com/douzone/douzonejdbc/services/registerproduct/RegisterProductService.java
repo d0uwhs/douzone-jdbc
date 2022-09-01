@@ -14,8 +14,7 @@ public interface RegisterProductService {
 
     Integer registerProduct(ProductDto productDto);
 
-    Integer removeProduct(ProductDto productDto);
+    Integer removeProduct(String productId);
 
     Integer editProduct(ProductDto productDto);
-
 }

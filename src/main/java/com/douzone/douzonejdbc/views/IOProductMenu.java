@@ -22,7 +22,7 @@ public class IOProductMenu {
                     "5. 상품 출고\n" +
                     "9. 메인 메뉴로 돌아가기\n" +
                     "번호 선택 : ");
-            String selectMenu = scanner.next();
+            String selectMenu = scanner.nextLine();
 
             // TODO : 보호절
 

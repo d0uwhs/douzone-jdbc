@@ -25,12 +25,9 @@ public class DefaultRegisterProductService implements RegisterProductService {
     private DefaultRegisterProductService() {
     }
 
-    public static DefaultRegisterProductService getInstance(){
+    public static DefaultRegisterProductService getInstance() {
         return instance;
     }
-
-
-
 
     @Override
     public List<ProductDto> getAllRegisteredProducts() {
@@ -41,8 +38,8 @@ public class DefaultRegisterProductService implements RegisterProductService {
     @Override
     public List<ProductDto> findByRegisteredProducts(String productId) throws ProductNotFoundException {
         Connection connection = getConnection();
-        List<ProductDto> productDtoList = productStockRepository.findByRegisteredProducts(connection,productId);
-        if (productDtoList.isEmpty()){
+        List<ProductDto> productDtoList = productStockRepository.findByRegisteredProducts(connection, productId);
+        if (productDtoList.isEmpty()) {
             throw new ProductNotFoundException();
         }
         return productDtoList;
@@ -51,19 +48,21 @@ public class DefaultRegisterProductService implements RegisterProductService {
     @Override
     public Integer registerProduct(ProductDto productDto) {
         Connection connection = getConnection();
-        Integer result =  productStockRepository.registerProduct(connection, productDto);
-        return transaction(connection,result);
+        Integer result = productStockRepository.registerProduct(connection, productDto);
+        return transaction(connection, result);
     }
 
     @Override
-    public Integer removeProduct(ProductDto productDto) {
-        return null;
+    public Integer removeProduct(String productId) {
+        Connection connection = getConnection();
+        Integer result = productStockRepository.removeProduct(connection, productId);
+        return transaction(connection, result);
     }
 
     @Override
     public Integer editProduct(ProductDto productDto) {
-        return null;
+        Connection connection = getConnection();
+        Integer result = productStockRepository.editProduct(connection, productDto);
+        return transaction(connection, result);
     }
-
-
 }

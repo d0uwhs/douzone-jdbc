@@ -83,12 +83,29 @@ public class ProductStockRepositoryImpl implements ProductStockRepository {
 
     @Override
     public Integer editProduct(Connection connection, ProductDto productDto) {
-        return null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                "UPDATE PRODUCT_STOCK SET P_NAME = ?, PRICE = ?, DESCRIPTION = ? WHERE PRODUCT_ID = ?"
+        )) {
+            preparedStatement.setString(1, productDto.getpName());
+            preparedStatement.setLong(2, productDto.getPrice());
+            preparedStatement.setString(3, productDto.getDescription());
+            preparedStatement.setString(4, productDto.getProductId());
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public Integer removeProduct(Connection connection) {
-        return null;
+    public Integer removeProduct(Connection connection, String productId) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                "DELETE FROM PRODUCT_STOCK WHERE PRODUCT_ID = ?"
+        )) {
+            preparedStatement.setString(1, productId);
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
